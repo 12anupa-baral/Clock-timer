@@ -6,12 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Countdown Timer</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
 </head>
 
 <body>
-    <div id="timer">05:00</div>
-
-    <script src="script.js"></script>
+    <div id="timer-container">
+        <div id="timer">05:00</div>
+        <div id="buttons">
+            <button class="start" onclick="startTimer()">Start</button>
+            <button class="pause" onclick="pauseResumeTimer()">Pause</button>
+            <button class="stop" onclick="stopTimer()">Reset</button>
+        </div>
+    </div>
 </body>
 
 </html>

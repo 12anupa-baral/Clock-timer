@@ -1,24 +1,44 @@
-function startTimer(duration, display) {
-  var timer = duration,
-    minutes,
-    seconds;
-  setInterval(function () {
-    minutes = parseInt(timer / 60, 10);
-    seconds = parseInt(timer % 60, 10);
+var timerInterval;
+var timerRunning = false;
+var remainingTime = 5 * 60;
 
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
+function startTimer() {
+  if (!timerRunning) {
+    var display = document.querySelector("#timer");
+    timerInterval = setInterval(function () {
+      var minutes = parseInt(remainingTime / 60, 10);
+      var seconds = parseInt(remainingTime % 60, 10);
 
-    display.textContent = minutes + ":" + seconds;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    if (--timer < 0) {
-      timer = duration;
-    }
-  }, 1000);
+      display.textContent = minutes + ":" + seconds;
+
+      if (--remainingTime < 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        remainingTime = 5 * 60;
+        display.textContent = "05:00";
+      }
+    }, 1000);
+
+    timerRunning = true;
+  }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  var fiveMinutes = 5 * 60,
-    display = document.querySelector("#timer");
-  startTimer(fiveMinutes, display);
-});
+function pauseResumeTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+  } else {
+    startTimer();
+  }
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  var display = document.querySelector("#timer");
+  display.textContent = "05:00";
+  remainingTime = 5 * 60;
+}
