@@ -9,14 +9,10 @@ function startTimer() {
       remainingTime = inputTime * 60;
 
       var display = document.querySelector("#timer");
+      display.textContent = formatTime(remainingTime);
+
       timerInterval = setInterval(function () {
-        var minutes = parseInt(remainingTime / 60, 10);
-        var seconds = parseInt(remainingTime % 60, 10);
-
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
-
-        display.textContent = minutes + ":" + seconds;
+        display.textContent = formatTime(remainingTime);
 
         if (--remainingTime < 0) {
           clearInterval(timerInterval);
@@ -34,13 +30,33 @@ function startTimer() {
 }
 
 function pauseResumeTimer() {
+  var pauseResumeButton = document.querySelector("button:nth-of-type(2)");
+
   if (timerRunning) {
     clearInterval(timerInterval);
     timerRunning = false;
-    document.querySelector("button:nth-of-type(2)").innerText = "Resume";
+    pauseResumeButton.innerText = "Resume";
   } else {
-    startTimer();
-    document.querySelector("button:nth-of-type(2)").innerText = "Pause";
+    if (remainingTime > 0) {
+      // Resume the timer from where it was paused
+      timerInterval = setInterval(function () {
+        var display = document.querySelector("#timer");
+        display.textContent = formatTime(remainingTime);
+
+        if (--remainingTime < 0) {
+          clearInterval(timerInterval);
+          timerRunning = false;
+          remainingTime = 0;
+          display.textContent = "00:00";
+          pauseResumeButton.innerText = "Resume";
+        }
+      }, 1000);
+
+      timerRunning = true;
+      pauseResumeButton.innerText = "Pause";
+    } else {
+      alert("The timer has already reached zero.");
+    }
   }
 }
 
@@ -50,4 +66,14 @@ function stopTimer() {
   var display = document.querySelector("#timer");
   display.textContent = "00:00";
   remainingTime = 0;
+}
+
+function formatTime(timeInSeconds) {
+  var minutes = parseInt(timeInSeconds / 60, 10);
+  var seconds = parseInt(timeInSeconds % 60, 10);
+
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  return minutes + ":" + seconds;
 }
